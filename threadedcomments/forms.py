@@ -34,3 +34,20 @@ class ThreadedCommentForm(CommentForm):
         d['title'] = self.cleaned_data['title']
         return d
 
+class EditCommentForm(forms.ModelForm):
+    comment = forms.TextField()
+    
+    def __init__(self, *args, **kwargs):
+        super(EditCommentForm, self).__init__(*args, **kwargs)
+        
+    def save(self, *args, **kwargs):
+        """
+        I only save the comments value. Nothing else can change.
+        """
+        self.instance.comment = self.cleaned_data['comment']
+        self.instance.save()
+        return self.instance
+    
+    class Meta:
+        model = ThreadedComment
+        fields = ["comment"]
