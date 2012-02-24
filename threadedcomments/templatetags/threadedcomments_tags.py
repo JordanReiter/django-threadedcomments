@@ -20,6 +20,29 @@ class CommentListNode(BaseThreadedCommentNode):
         self.root_only = root_only
         super(CommentListNode, self).__init__(**kwargs)
 
+    def get_query_set(self, context):
+        ctype, object_pk = self.get_target_ctype_pk(context)
+        if not object_pk:
+            return self.comment_model.objects.none()
+
+        qs = self.comment_model.objects.filter(
+            content_type = ctype,
+            object_pk    = smart_unicode(object_pk)
+        )
+
+        # The is_public and is_removed fields are implementation details of the
+        # built-in comment model's spam filtering system, so they might not
+        # be present on a custom comment model subclass. If they exist, we
+        # should filter on them.
+        field_names = [f.name for f in self.comment_model._meta.fields]
+        if 'is_public' in field_names:
+            qs = qs.filter(is_public=True)
+        if getattr(settings, 'COMMENTS_HIDE_REMOVED', True) and 'is_removed' in field_names:
+            qs = qs.filter(is_removed=False)
+
+        return qs
+
+
     def handle_token(cls, parser, token):
         tokens = token.contents.split()
 
