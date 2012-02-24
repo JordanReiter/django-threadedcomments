@@ -1,5 +1,6 @@
 from django import template
 from django.template.loader import render_to_string
+from django.utils.encoding import smart_unicode
 from django.contrib.comments.templatetags.comments import BaseCommentNode
 from django.contrib import comments
 from threadedcomments.util import annotate_tree_properties, fill_tree
