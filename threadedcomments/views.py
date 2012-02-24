@@ -4,7 +4,6 @@ from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from models import ThreadedComment
-from form import 
 
 def delete_comment(request, comment=None, template_name="comments/delete.html", next=None):
     comment = ThreadedComment.objects.get(pk=comment)
