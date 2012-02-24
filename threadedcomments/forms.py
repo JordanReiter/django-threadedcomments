@@ -35,7 +35,7 @@ class ThreadedCommentForm(CommentForm):
         return d
 
 class EditCommentForm(forms.ModelForm):
-    comment = forms.CharField()
+    comment = forms.CharField(widget=forms.Textarea())
     
     def __init__(self, *args, **kwargs):
         super(EditCommentForm, self).__init__(*args, **kwargs)

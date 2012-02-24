@@ -55,7 +55,7 @@ class ThreadedComment(Comment):
     @property
     def authorized_users(self):
         from django.contrib.auth.models import User
-        user_list = User.objects.filter(pk=self.user)
+        user_list = User.objects.filter(pk=self.user.pk)
         user_list |= User.objects.filter(is_superuser=True)
         try:
             user_list |= User.objects.filter(pk__in=self.content_object.admins)
@@ -66,7 +66,7 @@ class ThreadedComment(Comment):
     @property
     def editable(self):
         if EDITING_TIMEOUT:
-            return datetime.datetime.now() < (self.submit_date-datetime.timedelta(seconds=EDITING_TIMEOUT))
+            return datetime.datetime.now() < (self.submit_date+datetime.timedelta(seconds=EDITING_TIMEOUT))
         else:
             return True
 
